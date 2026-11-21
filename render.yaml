@@ -1,0 +1,21 @@
+# Render.com deployment configuration
+services:
+  - type: web
+    name: sortsmart
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn web_app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    envVars:
+      - key: SORTSMART_PROVIDER
+        value: groq
+      - key: GROQ_API_KEY
+        sync: false          # Set this in Render dashboard — never commit to git
+      - key: GROQ_MODEL
+        value: openai/gpt-oss-120b
+      - key: APP_PASSWORD
+        sync: false          # Set this in Render dashboard — your secret password
+      - key: APP_USERNAME
+        value: sortsmart
+      - key: PYTHON_VERSION
+        value: "3.11"
+    healthCheckPath: /api/status
